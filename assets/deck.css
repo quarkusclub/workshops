@@ -1,0 +1,915 @@
+/*
+ * Quarkus Club workshop decks. Base: reveal.js 5.x
+ *
+ * THIS FILE IS THE CONTRACT. A deck is pure composition: it declares <section>
+ * elements and applies the classes below. Never write per-deck CSS. If a deck
+ * needs a new layout, add a reusable class here so every future deck inherits it.
+ *
+ * Colour tokens mirror the blog: quarkusclub.github.io
+ */
+
+/* ------------------------------------------------------------------ THEME
+ * Light is the default: a workshop runs in a lit room, and paper projects
+ * better there than a dark IDE. The dark theme stays one keypress away for
+ * evening sessions and for people who prefer it.
+ *
+ * Only these tokens change between themes. Every rule below is written against
+ * them, so a third theme would be a single block.
+ */
+:root {
+  /* brand, constant across themes */
+  --brand-red: #b20738;
+  --brand-red-light: #d41a4a;
+  --brand-red-dark: #8a052c;
+
+  /* light: warm paper and near-black ink */
+  --base: #f6f2ec;
+  --base-2: #efe9e0;
+  --surface-1: #fffdfa;
+  --surface-2: #efe9e0;
+  --surface-3: #ddd4c8;
+  --line: #ddd4c8;
+
+  --ink: #171310;
+  --ink-2: #3f3832;
+  --muted: #857b72;
+
+  /* accent used for text and small marks; the darker brand red carries
+     contrast on paper, where brand-red-light would be too pale */
+  --accent: #b20738;
+  --accent-hover: #8a052c;
+  --accent-warm: #b33417;
+  --ok: #12703f;
+
+  --code-line-hl: rgba(178, 7, 56, .10);
+  --chip-bg: rgba(23, 19, 16, .04);
+  --gotcha-bg: rgba(179, 52, 23, .06);
+  --footer-ink: rgba(63, 56, 50, .55);
+  --notes-bg: rgba(255, 253, 250, .98);
+  --shadow: 0 1px 2px rgba(23, 19, 16, .05), 0 8px 24px rgba(23, 19, 16, .06);
+
+  /* syntax, tuned for the paper surface */
+  --hl-keyword: #b20738;
+  --hl-string: #1f6f43;
+  --hl-number: #9a4a00;
+  --hl-comment: #8b827a;
+  --hl-title: #123d6b;
+  --hl-type: #123d6b;
+  --hl-meta: #8a052c;
+  --hl-attr: #7a5b00;
+
+  --font-display: "Bebas Neue", system-ui, sans-serif;
+  --font-heading: "Open Sans", system-ui, sans-serif;
+  --font-body: "Hanken Grotesk", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, Menlo, monospace;
+}
+
+:root[data-theme="dark"] {
+  --base: #000000;
+  --base-2: #0d0d0d;
+  --surface-1: #1a1a1a;
+  --surface-2: #262626;
+  --surface-3: #333333;
+  --line: #3a3a3a;
+
+  --ink: #ffffff;
+  --ink-2: #d6d6d6;
+  --muted: #9a9a9a;
+
+  --accent: #d41a4a;
+  --accent-hover: #ff4d73;
+  --accent-warm: #c43a1c;
+  --ok: var(--ok);
+
+  --code-line-hl: rgba(178, 7, 56, .24);
+  --chip-bg: rgba(255, 255, 255, .03);
+  --gotcha-bg: rgba(196, 58, 28, .07);
+  --footer-ink: rgba(214, 214, 214, .32);
+  --notes-bg: rgba(10, 10, 10, .97);
+  --shadow: none;
+
+  --hl-keyword: #ff5f8a;
+  --hl-string: #9ae6b4;
+  --hl-number: #fbbf24;
+  --hl-comment: #7f7770;
+  --hl-title: #8ab4f8;
+  --hl-type: #8ab4f8;
+  --hl-meta: #ff9a6c;
+  --hl-attr: #e3c46a;
+}
+
+html, body { background: var(--base); }
+
+.reveal-viewport {
+  background:
+    radial-gradient(120% 90% at 10% 0%, rgba(178, 7, 56, .07) 0%, rgba(178, 7, 56, 0) 58%),
+    radial-gradient(90% 70% at 100% 100%, rgba(196, 58, 28, .06) 0%, rgba(196, 58, 28, 0) 60%),
+    var(--base);
+}
+
+:root[data-theme="dark"] .reveal-viewport {
+  background:
+    radial-gradient(120% 90% at 10% 0%, #170208 0%, rgba(23, 2, 8, 0) 60%),
+    radial-gradient(90% 70% at 100% 100%, rgba(178, 7, 56, 0.16) 0%, rgba(178, 7, 56, 0) 62%),
+    var(--base);
+}
+
+/* Full-bleed crimson wash on turning-point slides (.step / .bonus).
+   Painted on the viewport, not the section: a background on the 1280x720 slide
+   box shows visible edges against the surrounding viewport. */
+.reveal-viewport::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity .55s ease;
+  background: linear-gradient(115deg, rgba(178, 7, 56, .12), rgba(178, 7, 56, 0) 62%);
+}
+.reveal-viewport:has(section.present.step)::before,
+.reveal-viewport:has(section.present.bonus)::before { opacity: 1; }
+
+:root[data-theme="dark"] .reveal-viewport::before {
+  background: linear-gradient(115deg, rgba(178, 7, 56, .26), rgba(178, 7, 56, 0) 62%);
+}
+
+.reveal {
+  font-family: var(--font-body);
+  color: var(--ink-2);
+  letter-spacing: -0.003em;
+}
+
+.reveal .slides { text-align: left; }
+
+.reveal .slides section {
+  box-sizing: border-box;
+  padding: 0 88px;
+  height: 100%;
+  display: flex !important;
+  flex-direction: column;
+  justify-content: center;
+  /* A slide never scrolls. Content that does not fit is a content bug, to be
+     fixed by splitting the slide, not by hiding it behind a scrollbar the room
+     cannot see you using. The one exception is a code block, below. */
+  overflow: hidden;
+}
+
+/* ---------------------------------------------------------- Typography */
+
+.reveal h1, .reveal h2 {
+  font-family: var(--font-display);
+  font-weight: 400;
+  letter-spacing: .03em;
+  text-transform: uppercase;
+  line-height: .95;
+  margin: 0;
+  color: var(--ink);
+}
+.reveal h1 { font-size: 100px; }
+.reveal h2 { font-size: 66px; }
+
+.reveal h3 {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: 30px;
+  text-transform: none;
+  letter-spacing: 0;
+  color: var(--ink);
+  margin: 0 0 14px;
+}
+
+.reveal em { font-style: normal; color: var(--accent); }
+.reveal strong { color: var(--ink); font-weight: 700; }
+
+.reveal p {
+  font-size: 28px;
+  line-height: 1.45;
+  color: var(--ink-2);
+  margin: 0;
+}
+
+.lede { font-size: 34px; line-height: 1.35; color: var(--ink); max-width: 24ch; }
+.sub  { font-size: 25px; color: var(--muted); margin-top: 24px; max-width: 52ch; }
+
+/* Mono label at the top of a slide, with a rule running to the right edge */
+.kicker {
+  font-family: var(--font-mono);
+  font-size: 16px;
+  font-weight: 500;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 30px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.kicker::after { content: ""; flex: 1; height: 1px; background: var(--line); }
+
+/* ---------------------------------------------------------- Cover */
+
+.cover h1 { font-size: 106px; max-width: 17ch; }
+
+/* The full workshop title is longer than a display line can carry, so the
+   headline keeps the name and this carries the rest of it. */
+.cover .title-sub {
+  font-family: var(--font-heading);
+  font-weight: 600;
+  font-size: 30px;
+  line-height: 1.25;
+  color: var(--ink);
+  margin-top: 22px;
+  max-width: 34ch;
+}
+.cover .title-sub strong { color: var(--accent); }
+
+.cover .sub { font-size: 26px; margin-top: 20px; max-width: 44ch; color: var(--ink-2); }
+
+.byline {
+  margin-top: 54px;
+  padding-top: 22px;
+  border-top: 1px solid var(--line);
+  font-family: var(--font-mono);
+  font-size: 19px;
+  color: var(--ink);
+  display: flex;
+  gap: 16px;
+  align-items: baseline;
+  flex-wrap: wrap;
+}
+.byline .dot { color: var(--accent); }
+.byline .where {
+  color: var(--muted);
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  font-size: 15px;
+}
+
+/* ---------------------------------------------------------- Step divider
+   The turning point between steps. Oversized number, title, and the time box. */
+
+.step .num {
+  font-family: var(--font-mono);
+  font-size: 19px;
+  letter-spacing: .24em;
+  color: var(--accent);
+  margin-bottom: 18px;
+}
+.step h2 { font-size: 88px; max-width: 16ch; }
+.step .goal { font-size: 29px; color: var(--ink-2); margin-top: 26px; max-width: 40ch; }
+.step .meta {
+  margin-top: 40px;
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  font-family: var(--font-mono);
+  font-size: 18px;
+}
+.step .meta span {
+  padding: 9px 16px;
+  border: 1px solid var(--line);
+  border-radius: 3px;
+  color: var(--ink-2);
+  background: var(--chip-bg);
+}
+.step .meta span.time { border-color: var(--brand-red); color: var(--accent); }
+
+/* ---------------------------------------------------------- Code slides
+   Code is the point of a workshop deck, so it gets the whole slide and the
+   largest type the 1280x720 box allows while staying legible on a projector. */
+
+.code h3 { margin-bottom: 16px; }
+
+.reveal pre {
+  width: 100%;
+  margin: 0;
+  box-shadow: none;
+  font-size: 1em;
+  background: transparent;
+}
+
+/* The pre clips, the code scrolls. Keeping the scroll on the inner element
+   means the copy button, absolutely positioned here, stays put while the code
+   moves under it.
+   The shadow lives here rather than on the scrolling child: a scroll container
+   inside reveal's scaled transform tiles its own shadow while painting. */
+.reveal pre {
+  position: relative;
+  box-sizing: border-box;
+  max-height: 500px;
+  overflow: hidden;
+  border-radius: 4px;
+  box-shadow: var(--shadow);
+}
+
+.reveal pre code {
+  /* Explicit, because this deck no longer loads a highlight.js theme stylesheet
+     and that is where `display: block` used to come from. Left inline, the
+     element ignores width, max-height and overflow, and paints its background
+     once per line box instead of once per block. */
+  display: block;
+  width: 100%;
+  font-family: var(--font-mono);
+  font-size: 21px;
+  line-height: 1.5;
+  padding: 24px 26px;
+  border-radius: 4px;
+  background: var(--surface-1);
+  border: 1px solid var(--line);
+  /* border-box is load-bearing: with content-box the 48px of padding and the
+     border sit OUTSIDE max-height, and a long file overflows the slide. */
+  box-sizing: border-box;
+  max-height: 500px;
+  overflow: auto;
+  tab-size: 2;
+  scrollbar-width: thin;
+  scrollbar-color: var(--surface-3) transparent;
+}
+
+.reveal pre code::-webkit-scrollbar { width: 10px; height: 10px; }
+.reveal pre code::-webkit-scrollbar-track { background: transparent; }
+.reveal pre code::-webkit-scrollbar-thumb {
+  background: var(--surface-3);
+  border-radius: 6px;
+  border: 2px solid var(--surface-1);
+}
+.reveal pre code::-webkit-scrollbar-thumb:hover { background: var(--brand-red-dark); }
+
+/* Copy button, injected into every code block by assets/snippets.js.
+   Sits inside <pre> as a sibling of <code>, so it never pollutes the copied text. */
+.copy-btn {
+  position: absolute;
+  top: 10px;
+  right: 12px;
+  z-index: 5;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--muted);
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  border-radius: 3px;
+  padding: 6px 12px;
+  cursor: pointer;
+  opacity: .34;
+  transition: opacity .18s ease, color .18s ease, border-color .18s ease;
+}
+.reveal pre:hover .copy-btn,
+.copy-btn:focus-visible { opacity: 1; }
+.copy-btn:hover { color: var(--accent); border-color: var(--brand-red); }
+.copy-btn.done { opacity: 1; color: var(--ok); border-color: var(--ok); }
+.copy-btn.failed { opacity: 1; color: var(--accent-warm); border-color: var(--accent-warm); }
+
+/* Always visible on touch, where there is no hover to reveal it */
+@media (hover: none) { .copy-btn { opacity: .75; } }
+
+/* Denser code for the long files */
+.code.small pre code { font-size: 17px; line-height: 1.45; }
+.code.tiny  pre code { font-size: 14px; line-height: 1.4; }
+
+/* Filename tab above a code block */
+.filename {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 15px;
+  color: var(--muted);
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  border-bottom: none;
+  border-radius: 4px 4px 0 0;
+  padding: 6px 14px;
+  margin-bottom: -1px;
+}
+.filename + pre code { border-radius: 0 4px 4px 4px; }
+
+/* Line-highlight colours from the reveal highlight plugin */
+.reveal .hljs .highlight-line { background: var(--code-line-hl); }
+.reveal .hljs-ln-numbers { color: var(--surface-3); }
+
+/* Snippet loader states. A deck opened over file:// cannot fetch, and silence
+   there would mean presenting an empty code block. Fail loudly instead. */
+code[data-src].loading::before { content: "loading " attr(data-src); color: var(--muted); }
+code[data-src].failed {
+  color: var(--accent-warm);
+  white-space: pre-wrap;
+}
+
+/* ---------------------------------------------------------- Command slide
+   Something the room should type right now. */
+
+.cmd .line {
+  font-family: var(--font-mono);
+  font-size: 30px;
+  color: var(--ink);
+  background: var(--surface-1);
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--brand-red);
+  border-radius: 4px;
+  padding: 22px 26px;
+  margin-top: 26px;
+  display: flex;
+  gap: 16px;
+  align-items: baseline;
+  /* break-all splits words mid-token ("embeddi / ng-model"), which reads badly
+     on the prose lines. anywhere breaks only when a token genuinely cannot fit. */
+  overflow-wrap: anywhere;
+  word-break: normal;
+}
+.cmd .line::before { content: "$"; color: var(--accent); flex: none; }
+.cmd .line.no-prompt::before { content: none; }
+.cmd .note { font-size: 22px; color: var(--muted); margin-top: 20px; }
+
+/* Steps that genuinely need five or six commands. Same component, tighter
+   rhythm, so a long step stays on one slide instead of being split in two
+   and losing the "do all of this, then check" shape. */
+.cmd.dense .line { font-size: 25px; padding: 14px 20px; margin-top: 12px; }
+.cmd.dense .note { font-size: 20px; margin-top: 16px; }
+
+/* A command whose Windows form differs. The Unix form stays the primary line
+   and the Windows form rides inside the SAME box: a step that has to be correct
+   on both platforms then costs about a quarter of a line, not a whole one.
+   flex-wrap is safe here because a .line otherwise holds a single text child. */
+.cmd .line { flex-wrap: wrap; }
+.cmd .line .win {
+  flex: 0 0 100%;
+  display: flex;
+  gap: 14px;
+  align-items: baseline;
+  margin-top: 15px;
+  padding-top: 13px;
+  border-top: 1px dashed var(--line);
+  font-size: 23px;
+  color: var(--ink-2);
+}
+.cmd .line .win::before {
+  content: "POWERSHELL";
+  font-size: 14px;
+  letter-spacing: .14em;
+  color: var(--muted);
+  flex: none;
+}
+.cmd.dense .line .win { margin-top: 9px; padding-top: 8px; font-size: 19px; }
+.cmd.dense .line .win::before { font-size: 12px; }
+
+/* Two shells, one block. For the cases where the platform difference is not one
+   token but the shape of the whole command, so stacking both would cost a slide.
+   Each panel holds a real <pre><code>, which means each gets its own copy button
+   from addCopyButtons() and its own syntax highlighting, hidden panels included. */
+.tabs { margin-top: 6px; }
+
+/* Text tabs, not boxes: the deck already speaks in thin rules and mono labels,
+   and a boxed tab strip fights the paper. Active is ink plus a brand underline. */
+.tab-bar { display: flex; gap: 30px; margin-bottom: 16px; }
+.tab-btn {
+  font-family: var(--font-mono);
+  font-size: 17px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  padding: 0 0 8px;
+  background: none;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  color: var(--muted);
+  cursor: pointer;
+  transition: color .15s ease, border-color .15s ease;
+}
+.tab-btn:hover { color: var(--ink-2); }
+.tab-btn[aria-selected="true"] { color: var(--ink); border-bottom-color: var(--brand-red); }
+.tabs .tab-panel > pre { margin-top: 0; }
+
+/* These panels hold deliberately single-line commands, because a PowerShell
+   line split on backticks breaks the moment it is pasted. Wrap them instead of
+   scrolling, so the whole command is readable without a horizontal drag. */
+.tabs .tab-panel pre code { white-space: pre-wrap; overflow-wrap: anywhere; }
+
+/* ---------------------------------------------------------- Checkpoint
+   "You know it worked when". Green on purpose: the only non-brand colour in
+   the deck, so it reads instantly as a different kind of slide. */
+
+.checkpoint h2 { color: var(--ok); }
+.checkpoint ul { list-style: none; margin: 34px 0 0; padding: 0; }
+.checkpoint li {
+  font-size: 27px;
+  line-height: 1.45;
+  color: var(--ink-2);
+  padding: 13px 0 13px 42px;
+  border-top: 1px solid var(--line);
+  position: relative;
+}
+.checkpoint li:last-child { border-bottom: 1px solid var(--line); }
+.checkpoint li::before {
+  content: "✓";
+  position: absolute;
+  left: 0;
+  top: 13px;
+  color: var(--ok);
+  font-size: 24px;
+}
+
+/* ---------------------------------------------------------- Warning slide */
+
+.gotcha h2 { color: var(--accent-warm); }
+.gotcha .box {
+  margin-top: 30px;
+  padding: 26px 30px;
+  border: 1px dashed var(--accent-warm);
+  border-radius: 4px;
+  background: var(--gotcha-bg);
+  font-size: 26px;
+  line-height: 1.5;
+  color: var(--ink-2);
+}
+
+/* ---------------------------------------------------------- Agenda */
+
+.agenda ol {
+  list-style: none;
+  counter-reset: s -1;
+  margin: 26px 0 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0 44px;
+}
+.agenda li {
+  counter-increment: s;
+  font-size: 22px;
+  line-height: 1.3;
+  color: var(--ink-2);
+  padding: 9px 0 9px 52px;
+  border-top: 1px solid var(--line);
+  position: relative;
+}
+.agenda li::before {
+  content: counter(s, decimal-leading-zero);
+  position: absolute;
+  left: 0;
+  top: 12px;
+  font-family: var(--font-mono);
+  font-size: 15px;
+  color: var(--accent);
+}
+.agenda li .t { display: block; font-size: 15px; color: var(--muted); font-family: var(--font-mono); }
+.agenda li.break { color: var(--muted); }
+.agenda li.break::before { content: "··"; }
+
+/* ---------------------------------------------------------- Two columns */
+
+.duo { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; margin-top: 34px; }
+.duo .col { border-top: 2px solid var(--brand-red); padding-top: 20px; }
+.duo ul { list-style: none; margin: 0; padding: 0; }
+.duo li {
+  font-size: 23px;
+  line-height: 1.45;
+  color: var(--ink-2);
+  padding: 7px 0 7px 24px;
+  position: relative;
+}
+.duo li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 19px;
+  width: 11px;
+  height: 1px;
+  background: var(--accent);
+}
+
+/* ---------------------------------------------------------- Takeaway cards */
+
+.cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px; margin-top: 44px; }
+.cards .card { border-top: 2px solid var(--brand-red); padding-top: 20px; }
+.cards .n {
+  font-family: var(--font-mono);
+  font-size: 15px;
+  letter-spacing: .18em;
+  color: var(--accent);
+  display: block;
+  margin-bottom: 12px;
+}
+.cards p { font-size: 20px; line-height: 1.45; }
+
+/* ---------------------------------------------------------- Diagram slide */
+
+/* Both axes are capped. A slide is a fixed, non-scrolling box, so constraining
+   width alone lets a wide diagram grow tall enough to sit under the footer,
+   where the overflow audit cannot see it. The light plate is not decoration:
+   these diagrams are black line art on a transparent ground and would vanish
+   against the dark theme without it. */
+.figure figure {
+  margin: 26px 0 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.figure img {
+  max-width: 100%;
+  max-height: 400px;
+  object-fit: contain;
+  background: #fff;
+  padding: 16px;
+  border-radius: 5px;
+}
+.figure figcaption {
+  font-size: 20px;
+  color: var(--muted);
+  margin-top: 16px;
+  max-width: 62ch;
+  text-align: center;
+}
+.reveal-print .figure img { max-height: 340px; }
+
+/* ---------------------------------------------------------- Big statement */
+
+.answer h1 { font-size: 150px; color: var(--accent); letter-spacing: .01em; }
+.answer .sub { font-size: 30px; color: var(--ink); max-width: 34ch; margin-top: 30px; }
+
+/* ---------------------------------------------------------- Q&A list */
+
+.qa ol { list-style: none; counter-reset: q; margin: 36px 0 0; padding: 0; }
+.qa li {
+  counter-increment: q;
+  font-family: var(--font-heading);
+  font-weight: 600;
+  font-size: 30px;
+  line-height: 1.25;
+  color: var(--ink);
+  padding: 16px 0 16px 66px;
+  border-top: 1px solid var(--line);
+  position: relative;
+}
+.qa li:last-child { border-bottom: 1px solid var(--line); }
+.qa li::before {
+  content: "0" counter(q);
+  position: absolute;
+  left: 0;
+  top: 23px;
+  font-family: var(--font-mono);
+  font-size: 15px;
+  color: var(--accent);
+}
+
+/* ---------------------------------------------------------- Chrome */
+
+.reveal .progress { height: 3px; color: var(--brand-red); }
+.reveal .controls { color: var(--muted); }
+.reveal .slide-number {
+  background: transparent;
+  font-family: var(--font-mono);
+  font-size: 14px;
+  color: var(--muted);
+  right: 30px;
+  bottom: 22px;
+}
+
+.deck-footer {
+  position: fixed;
+  left: 30px;
+  bottom: 22px;
+  z-index: 30;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--footer-ink);
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+.deck-footer a { color: inherit; text-decoration: none; border-bottom: 1px solid transparent; }
+.deck-footer a:hover { color: var(--accent); border-bottom-color: var(--accent); }
+.deck-footer .lang {
+  display: inline-flex;
+  gap: 7px;
+  align-items: center;
+  padding-left: 12px;
+  border-left: 1px solid var(--line);
+}
+.deck-footer .lang b { color: var(--accent); font-weight: 500; }
+
+.reveal .fragment.fade-up { opacity: 0; transform: translateY(12px); transition: all .4s cubic-bezier(.22,1,.36,1); }
+.reveal .fragment.fade-up.visible { opacity: 1; transform: none; }
+
+@media print { .deck-footer { display: none; } }
+
+/* Live step indicator in the footer. Derived from the nearest preceding .step
+   divider, so a long step can span many slides and the room always knows where
+   it is. */
+.deck-footer .step-indicator {
+  padding-left: 12px;
+  border-left: 1px solid var(--line);
+  color: var(--accent);
+  letter-spacing: .12em;
+  max-width: 460px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.deck-footer .step-indicator:empty { display: none; }
+
+/* ---------------------------------------------------- Notes panel
+ * Opt-in, off by default. The presenter uses reveal's speaker window (key S)
+ * on a second screen and never turns this on, so sharing the deck window
+ * cannot leak notes. Someone reading the published deck turns it on with the
+ * footer button, the N key, or ?notes in the URL.
+ *
+ * Fixed and outside the slide on purpose: slides never scroll, so notes
+ * injected into one would push its content out of the box.
+ */
+/* reveal's reset.css declares `aside { display: block }` in the AUTHOR origin,
+   which beats the user-agent [hidden] rule whatever the specificity. Without
+   this the panel stays on screen with hidden=true. */
+.notes-panel[hidden] { display: none !important; }
+
+.notes-panel {
+  position: fixed;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  width: 380px;
+  z-index: 40;
+  background: var(--notes-bg);
+  border-left: 1px solid var(--line);
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--surface-3) transparent;
+}
+
+.notes-body {
+  padding: 26px 24px 40px;
+  font-family: var(--font-body);
+  font-size: 15px;
+  line-height: 1.55;
+  color: var(--ink-2);
+  white-space: pre-wrap;
+}
+
+.notes-body.empty { color: var(--muted); font-style: italic; }
+
+/* reveal puts .reveal-viewport on <body> itself, so this is one element, not a
+   descendant. Reveal.layout() is called after the toggle to rescale the slide. */
+body.notes-open { width: calc(100% - 380px); }
+
+.deck-footer .notes-toggle {
+  font-family: inherit;
+  font-size: inherit;
+  letter-spacing: inherit;
+  text-transform: inherit;
+  color: inherit;
+  background: none;
+  border: 1px solid var(--line);
+  border-radius: 3px;
+  padding: 3px 9px;
+  margin-left: 4px;
+  cursor: pointer;
+  transition: color .2s ease, border-color .2s ease;
+}
+.deck-footer .notes-toggle:hover { color: var(--accent); border-color: var(--brand-red); }
+.deck-footer .notes-toggle.on { color: var(--accent); border-color: var(--brand-red); }
+
+@media (max-width: 900px) {
+  .notes-panel { width: 100%; top: auto; height: 45%; border-left: none; border-top: 1px solid var(--line); }
+  body.notes-open { width: 100%; height: 55%; }
+}
+
+/* ------------------------------------------------- Syntax highlighting
+ * Defined here rather than loaded from a highlight.js theme, because a theme
+ * file is committed to one background colour and this deck has two. These map
+ * onto the same tokens as everything else, so code follows the theme.
+ *
+ * Keywords take the brand red on purpose: in a workshop the annotations and
+ * declarations ARE the subject, so they should read as the accent.
+ */
+/* highlight.js puts .hljs on the <code> element itself, so this selector
+   (0,2,0) outranks `.reveal pre code` (0,1,2). It must therefore NOT touch the
+   background, or the code panel disappears. */
+.reveal pre code.hljs {
+  color: var(--ink-2);
+  background: var(--surface-1);
+}
+
+.reveal .hljs-keyword,
+.reveal .hljs-selector-tag,
+.reveal .hljs-literal,
+.reveal .hljs-section { color: var(--hl-keyword); font-weight: 500; }
+
+.reveal .hljs-built_in,
+.reveal .hljs-type,
+.reveal .hljs-class .hljs-title,
+.reveal .hljs-title.class_ { color: var(--hl-type); }
+
+.reveal .hljs-title,
+.reveal .hljs-title.function_,
+.reveal .hljs-name { color: var(--hl-title); }
+
+.reveal .hljs-string,
+.reveal .hljs-regexp,
+.reveal .hljs-addition { color: var(--hl-string); }
+
+.reveal .hljs-number,
+.reveal .hljs-symbol,
+.reveal .hljs-bullet { color: var(--hl-number); }
+
+.reveal .hljs-comment,
+.reveal .hljs-quote { color: var(--hl-comment); font-style: italic; }
+
+.reveal .hljs-meta,
+.reveal .hljs-meta .hljs-keyword { color: var(--hl-meta); }
+
+.reveal .hljs-attr,
+.reveal .hljs-attribute,
+.reveal .hljs-property,
+.reveal .hljs-variable { color: var(--hl-attr); }
+
+.reveal .hljs-emphasis { font-style: italic; }
+.reveal .hljs-strong { font-weight: 700; }
+
+/* ------------------------------------------------------- Theme toggle */
+
+.deck-footer .theme-toggle {
+  font-family: inherit;
+  font-size: inherit;
+  letter-spacing: inherit;
+  text-transform: inherit;
+  color: inherit;
+  background: none;
+  border: 1px solid var(--line);
+  border-radius: 3px;
+  padding: 3px 9px;
+  margin-left: 4px;
+  cursor: pointer;
+  transition: color .2s ease, border-color .2s ease;
+}
+.deck-footer .theme-toggle:hover { color: var(--accent); border-color: var(--accent); }
+
+/* Repaint without a flash when the theme flips */
+html { color-scheme: light; }
+:root[data-theme="dark"] { color-scheme: dark; }
+
+/* A code slide that also carries a caption has less room for the code. Without
+   this the block runs to its full height and the caption lands under the fixed
+   footer, which the overflow audit cannot see because the footer is not part of
+   the slide. */
+.code:has(.sub) pre,
+.code:has(p:not(.sub)) pre { max-height: 380px; }
+.code:has(.sub) pre code,
+.code:has(p:not(.sub)) pre code { max-height: 380px; }
+
+/* Reserve the footer strip on every slide so nothing can sit under it. */
+.reveal .slides section { padding-bottom: 54px; }
+
+/* ------------------------------------------------------- Print / PDF
+ * reveal's print view measures every slide to paginate it. The screen rules
+ * that make a slide a fixed, non-scrolling box (height:100%, overflow:hidden)
+ * defeat that measurement, so they are unwound here. reveal puts .reveal-print
+ * on <html> when ?print-pdf is in the URL.
+ */
+.reveal-print .reveal .slides section {
+  height: auto;
+  min-height: 0;
+  overflow: visible;
+  page-break-inside: avoid;
+}
+
+.reveal-print .reveal pre,
+.reveal-print .reveal pre code {
+  max-height: none;
+  overflow: visible;
+}
+
+/* Chrome that only makes sense on screen */
+.reveal-print .copy-btn,
+.reveal-print .notes-panel,
+.reveal-print .deck-footer .theme-toggle,
+.reveal-print .deck-footer .notes-toggle { display: none !important; }
+
+/* A tab cannot be clicked on paper, so a hidden panel becomes content the reader
+   can never reach: the PDF was printing a bash/PowerShell control with only the
+   bash half under it, and the Windows command was simply missing from the
+   handout. Unfold every panel instead, each under its own label. Sections are
+   already height:auto in print, so the extra block just makes the page taller. */
+.reveal-print .tabs .tab-bar { display: none; }
+.reveal-print .tabs .tab-panel[hidden] { display: block !important; }
+.reveal-print .tabs .tab-panel + .tab-panel { margin-top: 20px; }
+.reveal-print .tabs .tab-panel::before {
+  content: attr(data-tab-label);
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 15px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 9px;
+}
+
+/* Printing the dark theme wastes toner and reads badly on paper */
+@media print {
+  :root[data-theme="dark"] {
+    --base: #ffffff;
+    --surface-1: #fbf9f7;
+    --ink: #111111;
+    --ink-2: #333333;
+  }
+}

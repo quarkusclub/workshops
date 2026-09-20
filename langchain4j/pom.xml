@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>club.quarkus.workshop</groupId>
+    <artifactId>quarkusclub-workshop-langchain4j</artifactId>
+    <version>1.0.0</version>
+
+    <packaging>pom</packaging>
+
+    <name>Quarkus Club Workshop :: LangChain4j</name>
+    <description>
+        Aggregator for the Section 1 step projects. Derived from
+        quarkusio/quarkus-workshop-langchain4j, Apache License 2.0. See ../NOTICE.
+    </description>
+
+    <modules>
+        <module>section-1/step-01</module>
+        <module>section-1/step-02</module>
+        <module>section-1/step-03</module>
+        <module>section-1/step-04</module>
+        <module>section-1/step-05</module>
+        <module>section-1/step-06</module>
+        <module>section-1/step-07</module>
+        <module>section-1/step-08</module>
+        <module>section-1/step-08-mcp-server</module>
+        <module>section-1/step-09</module>
+        <module>section-1/step-10</module>
+    </modules>
+</project>

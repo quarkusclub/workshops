@@ -1,0 +1,66 @@
+name: Code
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'langchain4j/section-1/**'
+      - 'langchain4j/pom.xml'
+      - '.github/workflows/code.yml'
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: code-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  build:
+    name: "Build ${{ matrix.app }}"
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        app:
+          - section-1/step-01
+          - section-1/step-02
+          - section-1/step-03
+          - section-1/step-04
+          - section-1/step-05
+          - section-1/step-06
+          - section-1/step-07
+          - section-1/step-08
+          - section-1/step-08-mcp-server
+          - section-1/step-09
+          - section-1/step-10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: temurin
+          cache: maven
+
+      - name: Build
+        working-directory: langchain4j/${{ matrix.app }}
+        run: ./mvnw -B clean verify
+
+      # Quarkus only WARNS about misspelled configuration keys, so a green build
+      # says nothing about whether the config we teach actually does anything.
+      # Upstream shipped three dead quarkus.otel.* keys exactly this way.
+      - name: Report unrecognized configuration keys
+        if: always()
+        working-directory: langchain4j/${{ matrix.app }}
+        run: |
+          ./mvnw -B clean package -DskipTests 2>&1 | tee /tmp/build.log || true
+          if grep -q "Unrecognized configuration key" /tmp/build.log; then
+            echo "::warning title=Dead configuration::${{ matrix.app }} sets configuration keys Quarkus ignores"
+            grep "Unrecognized configuration key" /tmp/build.log | sort -u
+          else
+            echo "No unrecognized configuration keys."
+          fi

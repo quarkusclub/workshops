@@ -1,0 +1,38 @@
+Quarkus Club Workshops
+Copyright 2026 Quarkus Club and contributors
+Licensed under the Apache License, Version 2.0. See LICENSE.
+
+--------------------------------------------------------------------------------
+SCOPE OF DERIVATION
+--------------------------------------------------------------------------------
+
+Derivation in this repository is PER WORKSHOP, not repository-wide. The shared
+infrastructure is original work of the Quarkus Club; individual workshops may be
+derived from third-party material, and each one carries its own NOTICE with the
+attribution and statement of modifications its licence requires.
+
+ORIGINAL WORK OF THE QUARKUS CLUB
+
+    assets/        shared reveal.js deck theme, the deck runtime, and the
+                   Quarkus Club mark (favicon.ico, logo.png)
+    index.html     the navigation hub
+    SLIDES.md      how the deck system works
+    .github/       continuous integration
+    LICENSE, NOTICE, README.md
+
+WORKSHOPS AND THEIR PROVENANCE
+
+    langchain4j/   DERIVED from quarkusio/quarkus-workshop-langchain4j,
+                   Apache License 2.0, forked at commit
+                   2a33c7204b1165b7187b927ea9d74ecb13b92c4e (18 September 2026).
+                   Full attribution and statement of modifications:
+                   langchain4j/NOTICE
+
+--------------------------------------------------------------------------------
+TRADEMARKS
+--------------------------------------------------------------------------------
+
+Quarkus is a trademark of Red Hat, Inc.
+NVIDIA and NVIDIA NIM are trademarks of NVIDIA Corporation.
+Quarkus Club is an independent user group and is not affiliated with, nor
+endorsed by, Red Hat or NVIDIA.

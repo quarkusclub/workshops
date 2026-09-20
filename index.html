@@ -1,0 +1,479 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Quarkus Club · Workshops</title>
+<meta name="description" content="Workshops mão na massa do Quarkus Club, em português e inglês. Slides do apresentador, roteiro e código que roda.">
+<link rel="icon" href="assets/favicon.ico" sizes="16x16 32x32 48x48">
+<link rel="icon" href="assets/logo.png" type="image/png" sizes="145x145">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Open+Sans:wght@600;700&family=Hanken+Grotesk:wght@400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  /* Tokens mirror assets/deck.css so the hub and the decks read as one system.
+     Light is the default there, for the same reason: a workshop runs in a lit room. */
+  :root {
+    --brand-red: #b20738;
+    --brand-red-light: #d41a4a;
+    --brand-red-dark: #8a052c;
+
+    --base: #f6f2ec;
+    --surface-1: #fffdfa;
+    --surface-2: #efe9e0;
+    --line: #ddd4c8;
+
+    --ink: #171310;
+    --ink-2: #3f3832;
+    --muted: #857b72;
+
+    --accent: #b20738;
+    --accent-hover: #8a052c;
+    --chip-bg: rgba(178, 7, 56, .07);
+    --chip-line: rgba(178, 7, 56, .26);
+    --shadow: 0 1px 2px rgba(23, 19, 16, .05), 0 8px 24px rgba(23, 19, 16, .06);
+    --wash: linear-gradient(168deg, rgba(178, 7, 56, .09), transparent 62%);
+
+    --font-display: "Bebas Neue", system-ui, sans-serif;
+    --font-heading: "Open Sans", system-ui, sans-serif;
+    --font-body: "Hanken Grotesk", system-ui, sans-serif;
+    --font-mono: "JetBrains Mono", ui-monospace, monospace;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --base: #0f0d0c;
+      --surface-1: #1a1715;
+      --surface-2: #252120;
+      --line: #3a3330;
+
+      --ink: #fbf8f4;
+      --ink-2: #d8d0c8;
+      --muted: #9a8f86;
+
+      --accent: #ea5a7f;
+      --accent-hover: #f2839e;
+      --chip-bg: rgba(212, 26, 74, .16);
+      --chip-line: rgba(212, 26, 74, .42);
+      --shadow: 0 1px 2px rgba(0, 0, 0, .4), 0 10px 30px rgba(0, 0, 0, .35);
+      --wash: linear-gradient(168deg, rgba(178, 7, 56, .30), transparent 64%);
+    }
+  }
+
+  *, *::before, *::after { box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    * { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+  }
+
+  body {
+    margin: 0;
+    background: var(--base);
+    color: var(--ink-2);
+    font-family: var(--font-body);
+    font-size: 17px;
+    line-height: 1.62;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  a { color: var(--accent); text-underline-offset: 3px; }
+  a:hover { color: var(--accent-hover); }
+  :focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 3px; }
+
+  .wrap { max-width: 940px; margin: 0 auto; padding-inline: 20px; }
+
+  .skip {
+    position: absolute; left: -9999px; top: 0; z-index: 10;
+    background: var(--surface-1); color: var(--ink); padding: 10px 16px;
+    border: 1px solid var(--line); border-radius: 0 0 5px 0;
+  }
+  .skip:focus { left: 0; }
+
+  /* --------------------------------------------------------------- header */
+  header { border-bottom: 1px solid var(--line); background: var(--wash); }
+
+  .topbar {
+    display: flex; align-items: center; gap: 14px;
+    padding-block: 18px;
+  }
+  .mark { width: 38px; height: 38px; border-radius: 7px; flex: none; display: block; }
+  .wordmark {
+    font-family: var(--font-mono); font-size: .72rem; font-weight: 500;
+    letter-spacing: .2em; text-transform: uppercase; color: var(--muted);
+    margin: 0; margin-right: auto;
+  }
+  .wordmark a { color: inherit; text-decoration: none; }
+  .wordmark a:hover { color: var(--accent); }
+
+  /* language switch: two real buttons, current one pressed */
+  .lang { display: flex; gap: 0; border: 1px solid var(--line); border-radius: 5px; overflow: hidden; }
+  .lang button {
+    font-family: var(--font-mono); font-size: .72rem; letter-spacing: .1em;
+    padding: 6px 12px; border: 0; cursor: pointer;
+    background: var(--surface-1); color: var(--muted);
+    transition: background .15s ease, color .15s ease;
+  }
+  .lang button + button { border-left: 1px solid var(--line); }
+  .lang button:hover { color: var(--ink); }
+  .lang button[aria-pressed="true"] { background: var(--brand-red); color: #fff; }
+
+  header .intro { padding-block: 40px 52px; }
+  h1 {
+    font-family: var(--font-display); font-weight: 400; letter-spacing: .035em;
+    text-transform: uppercase; font-size: clamp(3rem, 11vw, 5.2rem);
+    line-height: .92; margin: 0 0 16px; color: var(--ink);
+  }
+  .tagline { font-size: 1.14rem; margin: 0; max-width: 52ch; color: var(--ink-2); }
+
+  /* ---------------------------------------------------------------- shell */
+  h2 {
+    font-family: var(--font-heading); font-size: .95rem; font-weight: 700;
+    color: var(--ink); text-transform: uppercase; letter-spacing: .12em;
+    margin: 64px 0 20px; padding-bottom: 10px; border-bottom: 1px solid var(--line);
+  }
+  h2:first-of-type { margin-top: 52px; }
+
+  /* ------------------------------------------------------- workshop card */
+  .ws {
+    background: var(--surface-1); border: 1px solid var(--line);
+    border-left: 3px solid var(--brand-red); border-radius: 6px;
+    padding: 28px 30px; box-shadow: var(--shadow);
+  }
+  .ws-head { display: flex; flex-wrap: wrap; gap: 10px 14px; align-items: baseline; }
+  .ws h3 {
+    font-family: var(--font-heading); font-size: 1.36rem; font-weight: 700;
+    color: var(--ink); margin: 0; line-height: 1.25;
+  }
+  .sub-title {
+    font-family: var(--font-heading); font-weight: 600; font-size: 1.02rem;
+    color: var(--ink); margin: 14px 0 0;
+  }
+  .sub-title strong { color: var(--accent); }
+  .desc { margin: 10px 0 0; max-width: 64ch; }
+
+  .tags { display: flex; flex-wrap: wrap; gap: 7px; }
+  .tag {
+    font-family: var(--font-mono); font-size: .68rem; padding: 3px 9px;
+    border-radius: 3px; background: var(--chip-bg);
+    color: var(--accent); border: 1px solid var(--chip-line); white-space: nowrap;
+  }
+
+  /* the arc of the workshop, scannable in one pass */
+  .arc {
+    display: flex; flex-wrap: wrap; align-items: center; gap: 6px 4px;
+    margin: 20px 0 0; padding: 0; list-style: none;
+    font-family: var(--font-mono); font-size: .74rem; color: var(--muted);
+  }
+  /* separator on the FOLLOWING item, never a trailing one: the last item in the
+     list is the hidden translation, and :last-child would still match it. */
+  .arc li + li::before { content: "→"; margin-right: 6px; color: var(--chip-line); }
+
+  .res {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(215px, 1fr));
+    gap: 12px; margin-top: 24px;
+  }
+  .res a {
+    display: block; text-decoration: none; color: inherit;
+    background: var(--surface-2); border: 1px solid var(--line);
+    border-radius: 5px; padding: 15px 17px;
+    transition: border-color .18s ease, transform .18s ease, box-shadow .18s ease;
+  }
+  .res a:hover {
+    border-color: var(--brand-red); transform: translateY(-2px);
+    box-shadow: var(--shadow);
+  }
+  .res .k {
+    font-family: var(--font-mono); font-size: .64rem; letter-spacing: .16em;
+    text-transform: uppercase; color: var(--muted); display: block; margin-bottom: 5px;
+  }
+  .res .n { font-weight: 700; color: var(--ink); font-size: 1rem; display: block; }
+  .res .h { display: block; font-size: .84rem; color: var(--muted); margin-top: 3px; }
+
+  /* ----------------------------------------------------------- prep block */
+  .lede { max-width: 66ch; }
+  .label {
+    font-family: var(--font-mono); font-size: .68rem; text-transform: uppercase;
+    letter-spacing: .16em; color: var(--muted); margin: 22px 0 7px;
+  }
+  .cmd { position: relative; }
+  .cmd pre {
+    background: var(--surface-1); border: 1px solid var(--line); border-radius: 5px;
+    padding: 14px 58px 14px 17px; overflow-x: auto; font-family: var(--font-mono);
+    font-size: .82rem; color: var(--ink); margin: 0; line-height: 1.5;
+  }
+  .copy {
+    position: absolute; top: 8px; right: 8px;
+    font-family: var(--font-mono); font-size: .64rem; letter-spacing: .1em;
+    text-transform: uppercase; padding: 5px 9px; cursor: pointer;
+    background: var(--surface-2); color: var(--muted);
+    border: 1px solid var(--line); border-radius: 4px;
+    transition: color .15s ease, border-color .15s ease;
+  }
+  .copy:hover { color: var(--accent); border-color: var(--chip-line); }
+  .copy[data-done="1"] { color: var(--accent); border-color: var(--chip-line); }
+
+  .note { font-size: .93rem; color: var(--muted); margin-top: 18px; max-width: 66ch; }
+
+  .soon {
+    border: 1px dashed var(--line); border-radius: 6px; padding: 22px 26px;
+    color: var(--muted); font-size: .96rem;
+  }
+
+  footer {
+    border-top: 1px solid var(--line); margin-top: 72px;
+    padding: 26px 0 72px; font-size: .87rem; color: var(--muted);
+  }
+  footer p { margin: 0 0 9px; max-width: 76ch; }
+
+  /* language visibility, CSS-driven so it is correct before any script runs */
+  html[lang="pt-BR"] [data-lang="en"] { display: none; }
+  html[lang="en"] [data-lang="pt"] { display: none; }
+
+  @media (max-width: 560px) {
+    body { font-size: 16px; }
+    header .intro { padding-block: 28px 38px; }
+    .ws { padding: 22px 20px; }
+    .topbar { flex-wrap: wrap; }
+  }
+</style>
+</head>
+<body>
+
+<a class="skip" href="#main"><span data-lang="pt">Pular para o conteúdo</span><span data-lang="en">Skip to content</span></a>
+
+<header>
+  <div class="wrap topbar">
+    <img class="mark" src="assets/logo.png" alt="" width="38" height="38">
+    <p class="wordmark"><a href="https://quarkusclub.github.io">Quarkus Club</a></p>
+    <div class="lang" role="group" aria-label="Idioma / Language">
+      <button type="button" data-set-lang="pt-BR" aria-pressed="true">PT</button>
+      <button type="button" data-set-lang="en" aria-pressed="false">EN</button>
+    </div>
+  </div>
+  <div class="wrap intro">
+    <h1>Workshops</h1>
+    <p class="tagline" data-lang="pt">Workshops mão na massa, em português e inglês. Cada um traz os slides do apresentador, um roteiro de condução e código que compila.</p>
+    <p class="tagline" data-lang="en">Hands-on workshops, in Portuguese and English. Each one ships the presenter deck, a run sheet for whoever is driving, and code that compiles.</p>
+  </div>
+</header>
+
+<main class="wrap" id="main">
+
+  <h2><span data-lang="pt">Disponíveis</span><span data-lang="en">Available</span></h2>
+
+  <div class="ws">
+    <div class="ws-head">
+      <h3>Quarkus LangChain4j Workshop</h3>
+      <div class="tags">
+        <span class="tag">11 steps</span>
+        <span class="tag">1h30</span>
+        <span class="tag">PT / EN</span>
+        <span class="tag">Java 21</span>
+        <span class="tag" data-lang="pt">custo zero</span>
+        <span class="tag" data-lang="en">zero cost</span>
+      </div>
+    </div>
+
+    <p class="sub-title" data-lang="pt">Integrando aplicações Java com LLMs, <strong>production grade</strong></p>
+    <p class="sub-title" data-lang="en">Integrating Java applications with LLMs, <strong>production grade</strong></p>
+
+    <p class="desc" data-lang="pt">
+      Chamar um LLM a partir do Java é fácil, mas isso não é uma aplicação pronta para produção:
+      falta contexto real nas respostas, controle sobre o que o modelo pode fazer e visibilidade
+      quando algo sai errado. Aqui você integra um LLM ao Quarkus com LangChain4j e evolui essa
+      integração passo a passo. Roda na API gratuita da NVIDIA.
+    </p>
+    <p class="desc" data-lang="en">
+      Calling an LLM from Java is easy, but that is not an application ready for production:
+      it lacks real context in its answers, control over what the model may do, and visibility
+      when something goes wrong. Here you integrate an LLM into Quarkus with LangChain4j and
+      grow that integration step by step. Runs on the free NVIDIA API.
+    </p>
+
+    <ul class="arc">
+      <li>Streaming</li>
+      <li>System message</li>
+      <li>RAG</li>
+      <li>Tools</li>
+      <li>MCP</li>
+      <li>Guardrails</li>
+      <li data-lang="pt">Observabilidade</li>
+      <li data-lang="en">Observability</li>
+    </ul>
+
+    <div class="res">
+      <a href="langchain4j/slides/" data-href-pt="langchain4j/slides/" data-href-en="langchain4j/slides/en.html">
+        <span class="k" data-lang="pt">Apresentador</span><span class="k" data-lang="en">Presenter</span>
+        <span class="n" data-lang="pt">Slides</span><span class="n" data-lang="en">Deck</span>
+        <span class="h" data-lang="pt">111 slides, com notas do apresentador.</span>
+        <span class="h" data-lang="en">111 slides, with presenter notes.</span>
+      </a>
+
+      <a href="https://github.com/quarkusclub/workshops/blob/main/langchain4j/ROTEIRO.md"
+         data-href-pt="https://github.com/quarkusclub/workshops/blob/main/langchain4j/ROTEIRO.md"
+         data-href-en="https://github.com/quarkusclub/workshops/blob/main/langchain4j/RUNSHEET.md">
+        <span class="k" data-lang="pt">Apresentador</span><span class="k" data-lang="en">Presenter</span>
+        <span class="n" data-lang="pt">Roteiro</span><span class="n" data-lang="en">Run sheet</span>
+        <span class="h" data-lang="pt">Cronograma de 90 min, ordem de corte, checklist.</span>
+        <span class="h" data-lang="en">90 minute timeline, cut order, checklist.</span>
+      </a>
+
+      <a href="#prepare">
+        <span class="k" data-lang="pt">Participante</span><span class="k" data-lang="en">Attendee</span>
+        <span class="n" data-lang="pt">Preparação</span><span class="n" data-lang="en">Get ready</span>
+        <span class="h" data-lang="pt">O que rodar antes de chegar.</span>
+        <span class="h" data-lang="en">What to run before you arrive.</span>
+      </a>
+
+      <a href="https://github.com/quarkusclub/workshops/tree/main/langchain4j/section-1">
+        <span class="k" data-lang="pt">Código</span><span class="k" data-lang="en">Code</span>
+        <span class="n" data-lang="pt">11 projetos Quarkus</span><span class="n" data-lang="en">11 Quarkus projects</span>
+        <span class="h" data-lang="pt">Um por step, cada um roda sozinho.</span>
+        <span class="h" data-lang="en">One per step, each runs on its own.</span>
+      </a>
+
+      <a href="https://github.com/quarkusclub/workshops/blob/main/langchain4j/CREDITOS.md"
+         data-href-pt="https://github.com/quarkusclub/workshops/blob/main/langchain4j/CREDITOS.md"
+         data-href-en="https://github.com/quarkusclub/workshops/blob/main/langchain4j/CREDITS.md">
+        <span class="k" data-lang="pt">Licença</span><span class="k" data-lang="en">Licence</span>
+        <span class="n" data-lang="pt">Créditos</span><span class="n" data-lang="en">Credits</span>
+        <span class="h" data-lang="pt">Derivado do workshop upstream, Apache 2.0.</span>
+        <span class="h" data-lang="en">Derived from the upstream workshop, Apache 2.0.</span>
+      </a>
+    </div>
+  </div>
+
+  <h2 id="prepare"><span data-lang="pt">Prepare sua máquina</span><span data-lang="en">Prepare your machine</span></h2>
+
+  <p class="lede" data-lang="pt">
+    Específico do workshop de LangChain4j. Rode <strong>antes</strong> do workshop, na máquina que
+    você vai usar. O script verifica seu ambiente, baixa o que a rede do evento não vai dar conta,
+    e termina com um health check dizendo se você está pronto.
+  </p>
+  <p class="lede" data-lang="en">
+    Specific to the LangChain4j workshop. Run it <strong>before</strong> the workshop, on the machine
+    you will use. It verifies your setup, warms the caches that venue wifi cannot handle, and ends
+    with a health check that tells you whether you are ready.
+  </p>
+
+  <div class="label">Linux / macOS</div>
+  <div class="cmd">
+    <pre>curl -fsSL https://quarkusclub.github.io/workshops/langchain4j/scripts/prepare.sh | bash</pre>
+    <button class="copy" type="button" data-copy>copy</button>
+  </div>
+
+  <div class="label">Windows PowerShell</div>
+  <div class="cmd">
+    <pre>irm https://quarkusclub.github.io/workshops/langchain4j/scripts/prepare.ps1 | iex</pre>
+    <button class="copy" type="button" data-copy>copy</button>
+  </div>
+
+  <p class="note" data-lang="pt">
+    Os scripts não instalam nada no sistema e não pedem elevação. Para ler antes de executar,
+    baixe com <code>-o</code> ou <code>-OutFile</code> primeiro: é um bom hábito com qualquer
+    script vindo da internet. O código está em
+    <a href="https://github.com/quarkusclub/workshops/tree/main/langchain4j/scripts">langchain4j/scripts</a>.
+  </p>
+  <p class="note" data-lang="en">
+    The scripts install nothing system-wide and never ask for elevation. To read before running,
+    download with <code>-o</code> or <code>-OutFile</code> first: a good habit with any script
+    from the internet. The source lives in
+    <a href="https://github.com/quarkusclub/workshops/tree/main/langchain4j/scripts">langchain4j/scripts</a>.
+  </p>
+
+  <h2><span data-lang="pt">Em breve</span><span data-lang="en">Coming up</span></h2>
+  <div class="soon">
+    <span data-lang="pt">Outros workshops entram aqui conforme forem ficando prontos. Tem uma ideia ou quer
+      apresentar um? Abra uma issue em</span>
+    <span data-lang="en">More workshops land here as they are finished. Got an idea, or want to present one?
+      Open an issue at</span>
+    <a href="https://github.com/quarkusclub/workshops/issues">quarkusclub/workshops</a>.
+  </div>
+
+  <footer>
+    <p data-lang="pt">Mantido pelo <a href="https://quarkusclub.github.io">Quarkus Club</a> ·
+       <a href="https://github.com/quarkusclub/workshops">código no GitHub</a></p>
+    <p data-lang="en">Maintained by the <a href="https://quarkusclub.github.io">Quarkus Club</a> ·
+       <a href="https://github.com/quarkusclub/workshops">source on GitHub</a></p>
+
+    <p data-lang="pt">O workshop de LangChain4j é derivado de
+       <a href="https://github.com/quarkusio/quarkus-workshop-langchain4j">quarkusio/quarkus-workshop-langchain4j</a>,
+       sob Apache License 2.0, com modificações. Veja o
+       <a href="https://github.com/quarkusclub/workshops/blob/main/langchain4j/NOTICE">NOTICE</a>.</p>
+    <p data-lang="en">The LangChain4j workshop is derived from
+       <a href="https://github.com/quarkusio/quarkus-workshop-langchain4j">quarkusio/quarkus-workshop-langchain4j</a>,
+       under the Apache License 2.0, with modifications. See the
+       <a href="https://github.com/quarkusclub/workshops/blob/main/langchain4j/NOTICE">NOTICE</a>.</p>
+
+    <p data-lang="pt">Quarkus é marca da Red Hat, Inc. NVIDIA é marca da NVIDIA Corporation.
+       O Quarkus Club é um grupo de usuários independente, sem vínculo com nenhuma das duas.</p>
+    <p data-lang="en">Quarkus is a trademark of Red Hat, Inc. NVIDIA is a trademark of NVIDIA
+       Corporation. The Quarkus Club is an independent user group, affiliated with neither.</p>
+  </footer>
+</main>
+
+<script>
+  (function () {
+    var STORE = 'qc-workshops-lang';
+    var root = document.documentElement;
+    var buttons = document.querySelectorAll('[data-set-lang]');
+
+    function apply(lang, remember) {
+      root.lang = lang;
+
+      buttons.forEach(function (b) {
+        b.setAttribute('aria-pressed', String(b.dataset.setLang === lang));
+      });
+
+      document.querySelectorAll('[data-href-pt]').forEach(function (a) {
+        a.href = lang === 'en' ? a.dataset.hrefEn : a.dataset.hrefPt;
+      });
+
+      document.querySelectorAll('[data-copy]').forEach(function (btn) {
+        if (!btn.dataset.done) { btn.textContent = lang === 'en' ? 'copy' : 'copiar'; }
+      });
+
+      if (remember) {
+        try { localStorage.setItem(STORE, lang); } catch (e) { /* private mode */ }
+        var url = new URL(location.href);
+        if (lang === 'en') { url.searchParams.set('lang', 'en'); }
+        else { url.searchParams.delete('lang'); }
+        history.replaceState(null, '', url);
+      }
+    }
+
+    function initial() {
+      var q = new URLSearchParams(location.search).get('lang');
+      if (q === 'en' || q === 'pt') { return q === 'en' ? 'en' : 'pt-BR'; }
+      var saved = null;
+      try { saved = localStorage.getItem(STORE); } catch (e) { /* private mode */ }
+      if (saved) { return saved; }
+      return (navigator.language || '').toLowerCase().startsWith('pt') ? 'pt-BR' : 'en';
+    }
+
+    buttons.forEach(function (b) {
+      b.addEventListener('click', function () { apply(b.dataset.setLang, true); });
+    });
+
+    apply(initial(), false);
+
+    document.querySelectorAll('[data-copy]').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var text = btn.parentElement.querySelector('pre').textContent.trim();
+        navigator.clipboard.writeText(text).then(function () {
+          btn.textContent = root.lang === 'en' ? 'copied' : 'copiado';
+          btn.dataset.done = '1';
+          setTimeout(function () {
+            btn.textContent = root.lang === 'en' ? 'copy' : 'copiar';
+            delete btn.dataset.done;
+          }, 1600);
+        });
+      });
+    });
+  })();
+</script>
+
+</body>
+</html>

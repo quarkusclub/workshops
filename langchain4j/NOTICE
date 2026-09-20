@@ -1,0 +1,104 @@
+Quarkus Club Workshop: Quarkus LangChain4j
+Copyright 2026 Quarkus Club and contributors
+
+This workshop is a DERIVATIVE WORK. Everything in this directory is covered by
+the statement below. It does NOT extend to the rest of the repository, which is
+original work of the Quarkus Club (see ../NOTICE).
+
+--------------------------------------------------------------------------------
+
+This product includes software developed as part of the Quarkus LangChain4j
+Workshop:
+
+    https://github.com/quarkusio/quarkus-workshop-langchain4j
+    Copyright the Quarkus LangChain4j Workshop authors
+    Licensed under the Apache License, Version 2.0
+
+This workshop is a DERIVATIVE WORK of that project, forked at
+commit 2a33c7204b1165b7187b927ea9d74ecb13b92c4e (18 September 2026).
+
+--------------------------------------------------------------------------------
+STATEMENT OF MODIFICATIONS (Apache License 2.0, Section 4(b))
+--------------------------------------------------------------------------------
+
+The following files have been modified from the original work:
+
+  section-1/*/src/main/resources/application.properties
+      Repointed from the OpenAI API to the NVIDIA NIM API. Changed base-url,
+      api-key (OPENAI_API_KEY -> NVIDIA_API_KEY) and model-name (gpt-4o ->
+      nvidia/nemotron-3-ultra-550b-a55b). Set quarkus.langchain4j.timeout to 2m
+      in every step: the 10s default is not enough once the model reasons over a
+      tool schema or a RAG-augmented prompt, and the timeout surfaces as a dead
+      WebSocket rather than as an error. Added snippet region markers (#--8<--)
+      so the decks can quote a named part of a file.
+
+  section-1/step-05/pom.xml
+  section-1/step-05/src/main/resources/application.properties
+      Added the in-process ONNX embedding model
+      (langchain4j-embeddings-bge-small-en-q) and declared the embedding-model
+      provider. Without this, RAG ingestion would fall back to the OpenAI
+      embedding model, which does not exist in the NVIDIA catalogue.
+
+  section-1/step-07, step-08, step-09, step-10
+      src/main/java/dev/langchain4j/quarkus/workshop/BookingRepository.java
+      src/main/java/dev/langchain4j/quarkus/workshop/Exceptions.java
+      Added a createBooking tool and the BookingCannotBeCreatedException it
+      raises, so the workshop shows the model writing to the database and not
+      only reading from it and deleting. The tool validates the arguments the
+      model chose, which is the teaching point: those arguments are untrusted
+      input.
+
+  section-1/step-09/src/main/resources/application.properties
+      Removed an observability block that configured extensions this step does
+      not have. Quarkus reported three unrecognized configuration keys for it.
+      The same block carried a hardcoded placeholder credential
+      (quarkus.otel.exporter.otlp.traces.headers=authorization=Bearer ...).
+
+  section-1/step-10/pom.xml
+      Added quarkus-micrometer-registry-prometheus so that /q/metrics is
+      reachable locally. The upstream setup exports metrics over OTLP only,
+      which leaves no way to read them outside Grafana.
+
+  section-1/step-10/src/main/java/dev/langchain4j/quarkus/workshop/CustomerSupportAgent.java
+      Raised @Timeout from 5000 to 60000 and lowered @Retry from three attempts
+      to one. Measured end to end, the guarded, RAG-augmented call lands around
+      34s, so the original budget was unreachable and the fallback fired on
+      every request. Retrying three times against a rate-limited endpoint turns
+      a timeout into a 429.
+
+  section-1/step-10/src/main/resources/application.properties
+      Added a console log format carrying traceId and spanId, so a request can
+      be followed from the terminal into Tempo.
+
+  pom.xml
+      New aggregator limited to the Section 1 modules.
+
+  Across the tree, whitespace only: a trailing newline was added at end of file
+  and trailing spaces were removed. No content changed.
+
+The following files are NEW and not derived from the original work:
+
+  slides/index.html, slides/en.html      (the reveal.js decks, PT and EN)
+  ROTEIRO.md, RUNSHEET.md                (presenter run sheet)
+  CREDITOS.md, CREDITS.md                (credits page)
+  UPSTREAM.md                            (defects found while porting)
+  scripts/prepare.sh, scripts/prepare.ps1 (workshop setup scripts)
+
+Repository-level material used by this workshop but NOT derived from the
+original work, and owned by the Quarkus Club, lives outside this directory:
+../assets, ../index.html, ../SLIDES.md, ../.github. See ../NOTICE.
+
+The following parts of the original work are NOT included:
+
+  Section 2 (agentic workflows), Section 3 (enterprise patterns),
+  section-1/step-11 (Jlama), and the RHEL setup guide.
+
+The original Java sources, RAG resources, diagrams and images are included
+unmodified except where stated above.
+
+--------------------------------------------------------------------------------
+
+Quarkus is a trademark of Red Hat, Inc.
+NVIDIA and NVIDIA NIM are trademarks of NVIDIA Corporation.
+Quarkus Club is an independent user group and is not affiliated with, nor
+endorsed by, Red Hat or NVIDIA.
