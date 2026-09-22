@@ -205,7 +205,18 @@ html, body { background: var(--base); }
   align-items: center;
   gap: 14px;
 }
-.kicker::after { content: ""; flex: 1; height: 1px; background: var(--line); }
+/* The rule stops short of the right margin to keep the top-right gutter clear
+   for the corner brand marks. A slide is centred vertically, so on the three
+   fullest slides the kicker rises to the very top of the box and its rule
+   would otherwise run straight through the logos. Reserving the space here
+   costs no vertical room, which those slides do not have. */
+.kicker::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: var(--line);
+  margin-right: 150px;
+}
 
 /* ---------------------------------------------------------- Cover */
 
@@ -693,6 +704,59 @@ code[data-src].failed {
 .reveal .fragment.fade-up.visible { opacity: 1; transform: none; }
 
 @media print { .deck-footer { display: none; } }
+
+/* ------------------------------------------------------ Corner brand marks
+ * Fixed in the top-right gutter, OUTSIDE the 1280x720 slide box, so the marks
+ * can never collide with slide content however full a slide gets. reveal's
+ * 4% margin leaves exactly this band free.
+ *
+ * Injected by deck.js rather than written into each deck, for the same reason
+ * the footer buttons are: a deck stays pure composition, and the two language
+ * versions cannot drift apart.
+ *
+ * Two Quarkus files rather than one recoloured with a filter: the logo is a
+ * Red Hat trademark and the reverse lockup is the form published for dark
+ * backgrounds, so the deck ships both and swaps between them.
+ */
+.deck-brand {
+  position: fixed;
+  top: 20px;
+  right: 30px;
+  z-index: 30;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  opacity: .85;
+  /* decorative: a click here must still reach reveal and advance the slide */
+  pointer-events: none;
+}
+.deck-brand img { display: block; width: auto; }
+/* The club mark ships as a square with a black ground baked in, which reads as
+   a stray black box on paper. The blog presents the same file as a disc inside
+   a brand-red ring, so the deck repeats that treatment instead of inventing a
+   second one. */
+.deck-brand .club {
+  height: 25px;
+  border-radius: 50%;
+  border: 1.5px solid var(--brand-red);
+}
+.deck-brand .qk { height: 18px; }
+.deck-brand .sep { width: 1px; height: 18px; background: var(--line); }
+
+.deck-brand .qk-dark { display: none; }
+:root[data-theme="dark"] .deck-brand .qk-light { display: none; }
+:root[data-theme="dark"] .deck-brand .qk-dark { display: block; }
+
+/* Hidden for the PDF the same way the footer is: a fixed element is painted
+   once, on page one, so it would brand the first slide and no other. */
+@media print { .deck-brand { display: none; } }
+.reveal-print .deck-brand { display: none; }
+@media (max-width: 900px) {
+  .deck-brand { top: 14px; right: 16px; gap: 10px; }
+  .deck-brand .club { height: 20px; }
+  .deck-brand .qk { height: 15px; }
+  .deck-brand .sep { height: 16px; }
+}
 
 /* Live step indicator in the footer. Derived from the nearest preceding .step
    divider, so a long step can span many slides and the room always knows where

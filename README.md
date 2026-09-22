@@ -130,3 +130,8 @@ and most of the code are theirs. See [`NOTICE`](NOTICE) for the full statement o
 
 Improvements that are not specific to this translation or to NVIDIA are more useful sent upstream,
 where they reach more people.
+
+The Quarkus name and logo are trademarks of Red Hat, Inc. The marks in
+[`assets/`](assets) are the official horizontal lockups from
+[design.jboss.org/quarkus](https://design.jboss.org/quarkus/logo/), unmodified, used to identify the
+technology this community workshop teaches.

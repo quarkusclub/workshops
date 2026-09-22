@@ -414,6 +414,35 @@
 })(window);
 
 /* ========================================================================
+ * CORNER BRAND MARKS
+ * Quarkus Club and Quarkus, top-right of every slide. Built here so a deck
+ * carries no markup for it and the language versions cannot diverge.
+ * ====================================================================== */
+(function (global) {
+  "use strict";
+
+  // Resolved while this file is being evaluated, which is the only moment
+  // document.currentScript points at it. A deck lives two directories below
+  // assets/, and a future deck may live somewhere else again, so the images
+  // are addressed relative to this script rather than to the page.
+  const HERE = (document.currentScript && document.currentScript.src) || location.href;
+  const asset = (name) => new URL(name, HERE).href;
+
+  global.initBrand = function () {
+    if (document.querySelector(".deck-brand")) return;
+
+    const bar = document.createElement("div");
+    bar.className = "deck-brand";
+    bar.innerHTML =
+      '<img class="club" alt="Quarkus Club" src="' + asset("logo.png") + '">' +
+      '<span class="sep"></span>' +
+      '<img class="qk qk-light" alt="Quarkus" src="' + asset("quarkus-logo.svg") + '">' +
+      '<img class="qk qk-dark" alt="" aria-hidden="true" src="' + asset("quarkus-logo-reverse.svg") + '">';
+    document.body.appendChild(bar);
+  };
+})(window);
+
+/* ========================================================================
  * ONE ENTRY POINT
  * Snippets load before Reveal starts, so the highlight plugin sees final text.
  * The Reveal configuration lives here so every deck shares it exactly.
@@ -441,6 +470,7 @@
       initTabs();
       initStepIndicator();
       initTheme();
+      initBrand();
       initNotes();
       return Reveal;
     });
