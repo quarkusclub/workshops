@@ -526,7 +526,7 @@ code[data-src].failed {
 
 .agenda ol {
   list-style: none;
-  counter-reset: s -1;
+  counter-reset: s;
   margin: 26px 0 0;
   padding: 0;
   display: grid;
@@ -567,6 +567,13 @@ code[data-src].failed {
   padding: 7px 0 7px 24px;
   position: relative;
 }
+.duo li a {
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-color: var(--line);
+  text-underline-offset: 3px;
+}
+.duo li a:hover { color: var(--accent); text-decoration-color: var(--accent); }
 .duo li::before {
   content: "";
   position: absolute;
@@ -576,6 +583,19 @@ code[data-src].failed {
   height: 1px;
   background: var(--accent);
 }
+
+.social { display: flex; gap: 32px; margin-top: 30px; }
+.social a {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--ink-2);
+  text-decoration: none;
+  font-family: var(--font-mono);
+  font-size: 18px;
+}
+.social a:hover { color: var(--accent); }
+.social svg { width: 22px; height: 22px; fill: currentColor; flex: none; }
 
 /* ---------------------------------------------------------- Takeaway cards */
 

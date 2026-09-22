@@ -37,12 +37,12 @@
           <div class="kicker">Quarkus Club</div>
           <h1>Quarkus LangChain<em>4j</em> Workshop</h1>
           <p class="title-sub">Integrando aplicações Java com LLMs<br /><strong>Prontas para produção</strong></p>
-          <p class="sub">90 minutos, onze steps, custo zero.</p>
+          <p class="sub">90 minutos, 12 passos, custo zero.</p>
           <div class="byline">
             <span>Quarkus Club</span>
             <span class="dot">/</span>
-            <span>API gratuita da NVIDIA</span>
-            <span class="where">Brasil</span>
+            
+            <span class="where">TDC São Paulo 2026</span>
           </div>
           <aside class="notes">
             Abertura, 10 min. Diga quem é o Quarkus Club, quem está apresentando, e
@@ -51,38 +51,15 @@
           </aside>
         </section>
 
-        <section class="answer">
-          <div class="kicker">O problema</div>
-          <h1>Fácil não é pronto.</h1>
-          <p class="sub fragment fade-up">
-            Chamar um LLM a partir do Java é fácil. Mas isso <strong>não é uma aplicação pronta
-            para produção</strong>: falta contexto real nas respostas, controle sobre o que o
-            modelo pode fazer, e visibilidade quando algo sai errado.
-          </p>
-          <aside class="notes">
-            Esta é a tese do workshop inteiro, então não corra.
-
-            É essa distância entre protótipo e produção que trava a maioria dos
-            projetos de IA generativa em times Java. Quase todo mundo na sala já
-            fez a primeira chamada para um LLM. Pergunte quantos colocaram isso em
-            produção, e por que não.
-
-            As três lacunas viram os três blocos do workshop:
-              contexto real  -> RAG (steps 05 e 06)
-              controle       -> tools, MCP e guardrails (steps 07 a 09)
-              visibilidade   -> observabilidade (step 10)
-          </aside>
-        </section>
-
         <section>
           <div class="kicker">Quem somos</div>
           <h2>Quarkus <em>Club</em></h2>
-          <p class="lede">Um grupo de usuários brasileiro em torno de Quarkus e do ecossistema Java moderno.</p>
+          <p class="lede">Somos um grupo de usuários em torno do Quarkus e Java.</p>
           <div class="duo">
             <div class="col">
               <h3>O que fazemos</h3>
               <ul>
-                <li>Workshops mão na massa como este</li>
+                <li>Workshops mão na massa</li>
                 <li>Meetups e talks</li>
                 <li>Contribuição para projetos open source</li>
               </ul>
@@ -90,11 +67,24 @@
             <div class="col">
               <h3>Como participar</h3>
               <ul>
-                <li>quarkusclub.github.io</li>
-                <li>Todo material é aberto e em português</li>
-                <li>Quer apresentar? Fale com a gente</li>
+                <li>Acesse <a href="https://quarkusclub.github.io" target="_blank" rel="noopener">quarkusclub.github.io</a></li>
+                <li>Quer apresentar? Fale com a gente no Discord!</li>
               </ul>
             </div>
+          </div>
+          <div class="social">
+            <a href="https://www.youtube.com/@QuarkusClub" target="_blank" rel="noopener">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M23.498 6.186a2.994 2.994 0 0 0-2.107-2.117C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.391.524A2.994 2.994 0 0 0 .502 6.186 31.26 31.26 0 0 0 0 12a31.26 31.26 0 0 0 .502 5.814 2.994 2.994 0 0 0 2.107 2.117c1.886.524 9.391.524 9.391.524s7.505 0 9.391-.524a2.994 2.994 0 0 0 2.107-2.117A31.26 31.26 0 0 0 24 12a31.26 31.26 0 0 0-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+              <span>YouTube</span>
+            </a>
+            <a href="https://www.linkedin.com/company/quarkus-club" target="_blank" rel="noopener">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+              <span>LinkedIn</span>
+            </a>
+            <a href="https://discord.com/invite/9RBxtHxvE8" target="_blank" rel="noopener">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.317 4.3698a19.7913 19.7913 0 0 0-4.8851-1.5152.0741.0741 0 0 0-.0785.0371c-.211.3753-.4447.8648-.6083 1.2495-1.8447-.2762-3.68-.2762-5.4868 0-.1636-.3933-.4058-.8742-.6177-1.2495a.077.077 0 0 0-.0785-.037 19.7363 19.7363 0 0 0-4.8852 1.515.0699.0699 0 0 0-.0321.0277C.5334 9.0458-.319 13.5799.0992 18.0578a.0824.0824 0 0 0 .0312.0561c2.0528 1.5076 4.0413 2.4228 5.9929 3.0294a.0777.0777 0 0 0 .0842-.0276c.4616-.6304.8731-1.2952 1.226-1.9942a.076.076 0 0 0-.0416-.1057c-.6528-.2476-1.2743-.5495-1.8722-.8923a.077.077 0 0 1-.0076-.1277c.1258-.0943.2517-.1923.3718-.2914a.0743.0743 0 0 1 .0776-.0105c3.9278 1.7933 8.18 1.7933 12.0614 0a.0739.0739 0 0 1 .0785.0095c.1202.099.246.1981.3728.2924a.077.077 0 0 1-.0066.1276 12.2986 12.2986 0 0 1-1.873.8914.0766.0766 0 0 0-.0407.1067c.3604.698.7719 1.3628 1.225 1.9932a.076.076 0 0 0 .0842.0286c1.961-.6067 3.9495-1.5219 6.0023-3.0294a.077.077 0 0 0 .0313-.0552c.5004-5.177-.8382-9.6739-3.5485-13.6604a.061.061 0 0 0-.0312-.0286zM8.02 15.3312c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9555-2.4189 2.157-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.9555 2.4189-2.1569 2.4189zm7.9748 0c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9554-2.4189 2.1569-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.946 2.4189-2.1568 2.4189Z"/></svg>
+              <span>Discord</span>
+            </a>
           </div>
           <aside class="notes">
             Slide reutilizável: vale para qualquer workshop do clube, não só este.
@@ -104,7 +94,7 @@
 
         <section>
           <div class="kicker">O que você leva daqui</div>
-          <h2>Um sistema de IA <em>completo</em>, não um hello world.</h2>
+          <h2>Um sistema de IA <em>completo</em>.</h2>
           <div class="cards">
             <div class="card">
               <span class="n">CONHECE</span>
@@ -117,7 +107,7 @@
               <p>Ele consulta o banco, cancela reservas e chama serviços de terceiros.</p>
             </div>
             <div class="card">
-              <span class="n">AGUENTA</span>
+              <span class="n">VIGIA</span>
               <h3>Guardrails e observabilidade</h3>
               <p>Se defende de prompt injection e reporta métricas, traces e logs.</p>
             </div>
@@ -130,8 +120,8 @@
         <section>
           <div class="kicker">O cenário</div>
           <h2>Miles of <em>Smiles</em></h2>
-          <p class="lede">Uma locadora de carros fictícia. Você foi contratado para colocar o atendimento por IA no ar.</p>
-          <p class="sub">Cada step adiciona uma capacidade que um assistente de verdade precisaria ter. Nada aqui é exercício artificial.</p>
+          <p class="lede">Uma locadora de carros fictícia.</p>
+          <p class="sub">Você foi contratado para colocar o atendimento por IA no ar. Cada step adiciona uma capacidade para o assistente da Miles of Smiles.</p>
           <aside class="notes">
             O cenário importa: dá um "porquê" para cada step. Quando alguém perguntar
             "para que serve isso?", a resposta é sempre um requisito da locadora.
@@ -142,6 +132,7 @@
           <div class="kicker">90 minutos</div>
           <h2>O <em>caminho</em></h2>
           <ol>
+            <li>Abertura <span class="t">10 min</span></li>
             <li>Sua chave da NVIDIA <span class="t">7 min</span></li>
             <li>O primeiro AI Service <span class="t">11 min</span></li>
             <li>Configurando o modelo <span class="t">4 min</span></li>
@@ -153,7 +144,6 @@
             <li>MCP <span class="t">7 min</span></li>
             <li>Guardrails <span class="t">8 min</span></li>
             <li>Observabilidade <span class="t">5 min</span></li>
-            <li class="break">Abertura 10 min · fechamento e perguntas 5 min</li>
           </ol>
           <aside class="notes">
             Diga os dois modos em voz alta na abertura. É a informação mais
