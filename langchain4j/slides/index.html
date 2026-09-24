@@ -99,7 +99,7 @@
             <div class="card">
               <span class="n">CONHECE</span>
               <h3>RAG</h3>
-              <p>O assistente responde com base nos documentos da empresa, não no que o modelo decorou.</p>
+              <p>O assistente responde com base nos documentos da empresa, você tem um contexto que não é do modelo sendo usado pelo modelo.</p>
             </div>
             <div class="card">
               <span class="n">AGE</span>
@@ -395,11 +395,11 @@ Invoke-RestMethod -Uri https://integrate.api.nvidia.com/v1/chat/completions -Met
         <section class="cmd">
           <div class="kicker">Converse</div>
           <h2>Duas mensagens, nesta ordem</h2>
-          <div class="line no-prompt">Meu nome é Clement.</div>
+          <div class="line no-prompt">Meu nome é Bob.</div>
           <div class="line no-prompt">Qual é o meu nome?</div>
           <p class="note">Ele acerta. Guarde essa observação, porque ela é mais estranha do que parece.</p>
           <aside class="notes">
-            Peça um nome para a plateia em vez de usar Clement. Engaja muito mais.
+            Peça um nome para a plateia em vez de usar Bob. Engaja muito mais.
           </aside>
         </section>
 
@@ -422,9 +422,9 @@ Invoke-RestMethod -Uri https://integrate.api.nvidia.com/v1/chat/completions -Met
 - body: {
   "model" : "nvidia/nemotron-3-ultra-550b-a55b",
   "messages" : [ {
-    "role" : "user",      "content" : "Meu nome é Clement."
+    "role" : "user",      "content" : "Meu nome é Bob."
   }, {
-    "role" : "assistant", "content" : "Olá, Clement! Como posso ajudar?"
+    "role" : "assistant", "content" : "Olá, Bob! Como posso ajudar?"
   }, {
     "role" : "user",      "content" : "Qual é o meu nome?"
   } ],

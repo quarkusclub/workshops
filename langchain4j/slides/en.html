@@ -422,11 +422,11 @@ Invoke-RestMethod -Uri https://integrate.api.nvidia.com/v1/chat/completions -Met
         <section class="cmd">
           <div class="kicker">Chat</div>
           <h2>Two messages, in this order</h2>
-          <div class="line no-prompt">My name is Clement.</div>
+          <div class="line no-prompt">My name is Bob.</div>
           <div class="line no-prompt">What is my name?</div>
           <p class="note">It gets it right. Hold on to that, because it is stranger than it looks.</p>
           <aside class="notes">
-            Ask the audience for a name instead of using Clement. It engages far more.
+            Ask the audience for a name instead of using Bob. It engages far more.
           </aside>
         </section>
 
@@ -450,9 +450,9 @@ Invoke-RestMethod -Uri https://integrate.api.nvidia.com/v1/chat/completions -Met
 - body: {
   "model" : "nvidia/nemotron-3-ultra-550b-a55b",
   "messages" : [ {
-    "role" : "user",      "content" : "My name is Clement."
+    "role" : "user",      "content" : "My name is Bob."
   }, {
-    "role" : "assistant", "content" : "Hello Clement! How can I help?"
+    "role" : "assistant", "content" : "Hello Bob! How can I help?"
   }, {
     "role" : "user",      "content" : "What is my name?"
   } ],
